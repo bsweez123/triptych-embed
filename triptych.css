@@ -1,23 +1,51 @@
 /* triptych.css – styles for the three‐column scroll effect */
+
+/* 1) Reset margins & set black background for entire page */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #000;
+  color: #fff;
+  height: 100%;
+}
+
+/* 2) Style the header/title (centered white text) */
+.page-header {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 3rem; /* adjust as needed */
+  font-weight: 400;
+}
+
+/* 3) Container holding all 3 columns */
 .triple-scroll-container {
   display: flex;
   width: 100%;
-  background: #000;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  height: calc(100vh - 80px); /* full viewport height minus header (80px total) */
+  /* If your header is taller/shorter, adjust “80px” accordingly */
+  background-color: #000;
 }
-.triple-scroll-container .scroll-column {
+
+/* 4) Each column: one‐third width, full height, vertical scroll enabled */
+.scroll-column {
   flex: 1 1 33.3333%;
   max-width: 33.3333%;
-  height: 100vh;
+  height: 100%;
   overflow-y: auto;
-  background: #000;
+  scroll-behavior: smooth; /* optional: smooth scroll snaps */
+  background-color: #000;   /* matches page background */
 }
-.triple-scroll-container .scroll-column img {
+
+/* 5) Images inside each column: fill width, auto height */
+.scroll-column img {
+  display: block;
   width: 100%;
   height: auto;
-  display: block;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
