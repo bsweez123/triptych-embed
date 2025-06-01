@@ -1,58 +1,59 @@
-/* ───────────────────────────────────────────────────────────────────────────────── */
-/* triptych.css  —  “one fish tall” container, corrects for 1280×2160 slices       */
-/* ───────────────────────────────────────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────── */
+/* triptych.css — styles for three‐column scroll effect (first fish always visible) */
+/* ─────────────────────────────────────────────────────────────────── */
 
-/* 1) BASIC RESET & FULLSCREEN BLACK BACKGROUND */
+/* 1) Make the <html> and <body> span 100% of the iframe’s height, with no extra margin/padding. */
 html,
 body {
   margin: 0;
   padding: 0;
-  background: #000;
+  background: #000;          /* black background */
   height: 100%;
-  overflow: hidden;  /* hide any page‐level scrollbars */
+  width: 100%;
 }
 
-/* 2) THE MAIN “ONE FISH” CONTAINER */
-/*    Each slice is 1280×2160, so aspect = 2160/1280 = 1.6875.
-      Each column is 33.3333% of viewport width (i.e. 33.3333 vw). 
-      Therefore one slice’s height = 33.3333 vw × 1.6875 = 56.25 vw. */
+/* 2) The outer container sits full‐screen in the iframe, laid out as three equal columns. */
 .triple-scroll-container {
   display: flex;
-  width: 100vw;
-  height: 56.25vw;       /* exactly “one slice tall” on any screen */
-  background: #000;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  overflow: hidden;      /* hide everything beneath the first fish */
+  width: 100vw;              /* use the entire viewport width */
+  height: 100vh;             /* use the entire viewport height */
+  overflow: hidden;          /* hide any overflow from the container itself */
+  background: #000;          /* also black behind each column */
 }
 
-/* 3) INDIVIDUAL SCROLLING COLUMNS */
+/* 3) Each column takes exactly one‐third of the width and can scroll vertically. */
 .triple-scroll-container .scroll-column {
-  flex: 1 1 33.3333%;     /* one‐third of width */
-  max-width: 33.3333%;
-  height: 100%;           /* fill 56.25 vw of parent */
-  overflow-y: auto;       /* vertical scrolling for slice #2 & #3 */
-  background: #000;
-  box-sizing: border-box;
+  flex: 1 1 33.3333%;         /* grow/shrink so it’s always 1/3 of the width */
+  max-width: 33.3333%;        /* never go past one‐third width */
+  height: 100vh;              /* fill the viewport height */
+  overflow-y: auto;           /* allow vertical scrolling inside each column */
+  background: #000;           /* black background for each column */
+  box-sizing: border-box;     
 
-  /* hide scrollbars in Firefox: */
-  scrollbar-width: none;
-  /* hide scrollbars in IE10+: */
-  -ms-overflow-style: none;
+  /* Hide scrollbars in modern browsers */
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE 10+ */
 }
-
-/* hide scrollbars in WebKit-based browsers (Chrome, Safari, Edge): */
 .triple-scroll-container .scroll-column::-webkit-scrollbar {
-  display: none;
+  display: none;              /* Chrome/Safari/Edge */
 }
 
-/* 4) MAKE EACH IMAGE FILL ITS COLUMN WIDTH AND KEEP ASPECT RATIO */
+/* 4) Force each image to scale so that its height can never exceed 100vh.
+      As a result, the first fish will always appear 100% tall (i.e. ﬁt exactly the column’s height).
+      Any subsequent fish in that same column will be “below” and require the user to scroll. */
 .triple-scroll-container .scroll-column img {
-  width: 100%;
-  height: auto;           /* preserves 1280×2160 proportions */
+  width: 100%;                /* fill the full column width */
+  height: auto;               /* preserve aspect ratio */
+  max-height: 100vh;          /* never be taller than the viewport height */
+  object-fit: contain;        /* ensure the entire fish is shown (no cropping) */
   display: block;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* 5) (Optional) If you want absolutely zero white gaps on mobile browsers that put a security bar 
+       at the top, you can also add this to prevent any “pull‐to‐refresh” bounce: */
+html {
+  overscroll-behavior-y: none;
 }
