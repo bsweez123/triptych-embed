@@ -1,0 +1,24 @@
+/* triptych.css – styles for the three‐column scroll effect */
+.triple-scroll-container {
+  display: flex;
+  width: 100%;
+  background: #000;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.triple-scroll-container .scroll-column {
+  flex: 1 1 33.3333%;
+  max-width: 33.3333%;
+  height: 100vh;
+  overflow-y: auto;
+  background: #000;
+}
+.triple-scroll-container .scroll-column img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
