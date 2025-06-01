@@ -1,78 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Triptych Scroll</title>
+/* triptych.css — “slot machine window” forcing a 16:9 viewport so one full fish is visible */
 
-  <!-- link your updated CSS -->
-  <link rel="stylesheet" href="triptych.css" />
-</head>
-<body>
-  <!-- 1. The 16∶9 wrapper -->
-  <div class="wrapper">
-    <!-- 2. The flex row -->
-    <div class="triple-scroll-container">
-      <!-- LEFT column -->
-      <div class="scroll-column">
-        <img src="first-fish-left.png" alt="Fish 1 Left">
-        <img src="second-fish-left.png" alt="Fish 2 Left">
-        <img src="third-fish-left.png" alt="Fish 3 Left">
-      </div>
+/* 1) Reset default spacing (Squarespace page background is already black) */
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
 
-      <!-- MIDDLE column -->
-      <div class="scroll-column">
-        <img src="first-fish-middle.png" alt="Fish 1 Middle">
-        <img src="second-fish-middle.png" alt="Fish 2 Middle">
-        <img src="third-fish-middle.png" alt="Fish 3 Middle">
-      </div>
+/* 2) .wrapper enforces a 16:9 aspect ratio (exactly one fish’s height) */
+.wrapper {
+  width: 100vw;
+  aspect-ratio: 16 / 9;    /* 3840 ÷ 2160 = 16÷9 */
+  overflow: hidden;        /* hide anything outside the 16:9 window */
+}
 
-      <!-- RIGHT column -->
-      <div class="scroll-column">
-        <img src="first-fish-right.png" alt="Fish 1 Right">
-        <img src="second-fish-right.png" alt="Fish 2 Right">
-        <img src="third-fish-right.png" alt="Fish 3 Right">
-      </div>
-    </div>
-  </div>
+/* 3) .triple-scroll-container fills the entire .wrapper */
+.triple-scroll-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
 
-  <!-- 3. The “infinite” scroll script -->
-  <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      // For each of the three columns, do these steps:
-      document.querySelectorAll('.scroll-column').forEach(col => {
-        // a) Capture the column’s current scrollHeight (this is the height of ONE set of images).
-        //    Because our wrapper is 16∶9 and each image is rendered to exactly that height,
-        //    col.scrollHeight right now = wrapperHeight.
-        const singleSetHeight = col.scrollHeight;
+/* 4) Each .scroll-column is one-third of the width and scrolls internally */
+.triple-scroll-container .scroll-column {
+  flex: 1 1 33.3333%;
+  max-width: 33.3333%;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
 
-        // b) Duplicate (clone) every child node (each <img>) and append them below.
-        //    Now each column has two back-to-back sets of fish: [1,2,3] + [1,2,3].
-        const originalContent = col.innerHTML;
-        col.innerHTML += originalContent;
+  /* Hide scrollbars in Firefox */
+  scrollbar-width: none;
+  /* Hide scrollbars in IE/Edge */
+  -ms-overflow-style: none;
+}
+.triple-scroll-container .scroll-column::-webkit-scrollbar {
+  display: none;  /* Hide WebKit scrollbars (Chrome/Safari/Edge) */
+}
 
-        // c) Add bottom padding exactly equal to one “column height” so the user never sees blank space.
-        //    When you scroll past the first two sets, there’s always more fish below.
-        col.style.paddingBottom = singleSetHeight + 'px';
-
-        // d) Immediately jump the column’s scrollTop to the start of the SECOND copy:
-        //    i.e. scrollTop = singleSetHeight → so you begin in the middle.
-        col.scrollTop = singleSetHeight;
-
-        // e) Listen for scroll events and “teleport” if you scroll too far up or down.
-        col.addEventListener('scroll', () => {
-          // If you scroll *below* the second copy’s end (i.e. past 2× singleSetHeight),
-          // jump back up by singleSetHeight so you’re again in the middle copy.
-          if (col.scrollTop >= singleSetHeight * 2) {
-            col.scrollTop -= singleSetHeight;
-          }
-          // If you scroll *above* the very start (scrollTop ≤ 0),
-          // jump down by singleSetHeight to land in the middle copy.
-          else if (col.scrollTop <= 0) {
-            col.scrollTop += singleSetHeight;
-          }
-        });
-      });
-    });
-  </script>
-</body>
-</html>
+/* 5) Each image fills its column’s width and preserves aspect ratio */
+.triple-scroll-container .scroll-column img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
