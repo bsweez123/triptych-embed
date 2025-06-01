@@ -1,59 +1,59 @@
-/* ─────────────────────────────────────────────────────────────────── */
-/* triptych.css — styles for three‐column scroll effect (first fish always visible) */
-/* ─────────────────────────────────────────────────────────────────── */
+/* ───────────────────────────────────────────────────────────────────────────────── */
+/* triptych.css — responsive 16:9 “one‐fish‐height” embed with three scrolling columns */
+/* ───────────────────────────────────────────────────────────────────────────────── */
 
-/* 1) Make the <html> and <body> span 100% of the iframe’s height, with no extra margin/padding. */
-html,
-body {
+/* 1) Reset and ensure full‐black background */
+html, body {
   margin: 0;
   padding: 0;
-  background: #000;          /* black background */
-  height: 100%;
+  background: #000;        /* black background behind everything */
+}
+
+/* 2) The ratio‐preserving wrapper: always 16:9 (3840×2160) */
+.embed-wrapper {
+  position: relative;
   width: 100%;
+  /* 2160/3840 = 0.5625 → 56.25% padding‐top yields 16:9 */
+  padding-top: 56.25%;
+  background: #000;
+  overflow: hidden;        /* hide anything above/below the 16:9 “window” */
 }
 
-/* 2) The outer container sits full‐screen in the iframe, laid out as three equal columns. */
-.triple-scroll-container {
-  display: flex;
-  width: 100vw;              /* use the entire viewport width */
-  height: 100vh;             /* use the entire viewport height */
-  overflow: hidden;          /* hide any overflow from the container itself */
-  background: #000;          /* also black behind each column */
+/* 3) Inside the wrapper, we absolutely position the triple‐scroll container */
+.embed-wrapper .triple-scroll-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;           /* three side‐by‐side columns */
+  background: #000;
+  box-sizing: border-box;
 }
 
-/* 3) Each column takes exactly one‐third of the width and can scroll vertically. */
+/* 4) Each column is exactly one‐third wide, full 100% height of the wrapper */
 .triple-scroll-container .scroll-column {
-  flex: 1 1 33.3333%;         /* grow/shrink so it’s always 1/3 of the width */
-  max-width: 33.3333%;        /* never go past one‐third width */
-  height: 100vh;              /* fill the viewport height */
-  overflow-y: auto;           /* allow vertical scrolling inside each column */
-  background: #000;           /* black background for each column */
-  box-sizing: border-box;     
+  flex: 1 1 33.3333%;
+  max-width: 33.3333%;
+  height: 100%;
+  overflow-y: auto;         /* each column scrolls internally */
+  background: #000;
+  box-sizing: border-box;
 
-  /* Hide scrollbars in modern browsers */
-  scrollbar-width: none;      /* Firefox */
-  -ms-overflow-style: none;   /* IE 10+ */
+  /* Hide scrollbar in most browsers */
+  scrollbar-width: none;    /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge 10+ */
 }
 .triple-scroll-container .scroll-column::-webkit-scrollbar {
-  display: none;              /* Chrome/Safari/Edge */
+  display: none;            /* Chrome/Safari/Edge WebKit */
 }
 
-/* 4) Force each image to scale so that its height can never exceed 100vh.
-      As a result, the first fish will always appear 100% tall (i.e. ﬁt exactly the column’s height).
-      Any subsequent fish in that same column will be “below” and require the user to scroll. */
+/* 5) Make each image fill its column width, keeping aspect ratio */
 .triple-scroll-container .scroll-column img {
-  width: 100%;                /* fill the full column width */
-  height: auto;               /* preserve aspect ratio */
-  max-height: 100vh;          /* never be taller than the viewport height */
-  object-fit: contain;        /* ensure the entire fish is shown (no cropping) */
+  width: 100%;
+  height: auto;
   display: block;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-/* 5) (Optional) If you want absolutely zero white gaps on mobile browsers that put a security bar 
-       at the top, you can also add this to prevent any “pull‐to‐refresh” bounce: */
-html {
-  overscroll-behavior-y: none;
 }
