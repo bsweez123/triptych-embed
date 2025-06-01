@@ -1,44 +1,52 @@
-/* triptych.css — “slot machine window” forcing a 16:9 viewport so one full fish is visible */
+/* ──────────────────────────────────────────────────────────────────────────── */
+/* triptych.css — “never-ending” three-column scroll (no seams) */
+/* ──────────────────────────────────────────────────────────────────────────── */
 
-/* 1) Reset default spacing (Squarespace page background is already black) */
+/* 1) Reset <html> & <body> so they fill 100% of the viewport */
 html,
 body {
   margin: 0;
   padding: 0;
+  background: #000;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;      /* prevent page-level scrollbars */
 }
 
-/* 2) .wrapper enforces a 16:9 aspect ratio (exactly one fish’s height) */
+/* 2) .wrapper: always keep a 16∶9 “window,” hiding overflow */
 .wrapper {
   width: 100vw;
-  aspect-ratio: 16 / 9;    /* 3840 ÷ 2160 = 16÷9 */
-  overflow: hidden;        /* hide anything outside the 16:9 window */
+  aspect-ratio: 16 / 9;  /* (width : height = 16∶9) */
+  background: #000;
+  overflow: hidden;      /* clip anything outside this 16∶9 box */
 }
 
-/* 3) .triple-scroll-container fills the entire .wrapper */
+/* 3) flex row of three columns, filling the wrapper */
 .triple-scroll-container {
   display: flex;
   width: 100%;
   height: 100%;
 }
 
-/* 4) Each .scroll-column is one-third of the width and scrolls internally */
+/* 4) Each column is exactly 33.3333% wide, no shrink/grow, hides its scrollbar */
 .triple-scroll-container .scroll-column {
-  flex: 1 1 33.3333%;
+  flex: 0 0 33.3333%;      /* fixed one-third width, never shrink/grow */
   max-width: 33.3333%;
-  height: 100%;
-  overflow-y: auto;
+  min-width: 0;            /* allow it to shrink properly in narrow viewports */
+  height: 100%;            /* fill the wrapper’s full height */
+  overflow-y: auto;        /* enable vertical scroll in each column */
   box-sizing: border-box;
+  background: #000;        /* fish slices already have black backgrounds */
 
-  /* Hide scrollbars in Firefox */
-  scrollbar-width: none;
-  /* Hide scrollbars in IE/Edge */
-  -ms-overflow-style: none;
+  /* hide all scrollbars (WebKit, Firefox, IE/Edge) */
+  scrollbar-width: none;         /* Firefox */
+  -ms-overflow-style: none;      /* IE 10+ */
 }
 .triple-scroll-container .scroll-column::-webkit-scrollbar {
-  display: none;  /* Hide WebKit scrollbars (Chrome/Safari/Edge) */
+  display: none;                 /* Safari/Chrome/Edge */
 }
 
-/* 5) Each image fills its column’s width and preserves aspect ratio */
+/* 5) Each image always fills its column’s width, preserving 1280×2160 aspect */
 .triple-scroll-container .scroll-column img {
   width: 100%;
   height: auto;
@@ -46,4 +54,9 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* 6) Add extra bottom padding equal to one “column height,” so the loop is seamless */
+.triple-scroll-container .scroll-column {
+  /* We will compute this dynamically via JS, so leave it unset here. */
 }
