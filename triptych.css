@@ -1,45 +1,52 @@
 /* ───────────────────────────────────────────────────────────────────────────────── */
-/* triptych.css — styles for the three-column scroll effect without scrollbars */
+/* triptych.css — updated to show exactly one fish per column on load */
 /* ───────────────────────────────────────────────────────────────────────────────── */
 
-/* Reset default spacing */
-body,
-html {
+/* Reset default spacing and set black background */
+html,
+body {
   margin: 0;
   padding: 0;
-  background: #000;             /* black background */
-  height: 100vh;                /* full viewport height */
+  background: #000;       /* black background */
+  height: 100%;
 }
 
-/* Container: flex row, full viewport width & height */
+/* Container: flex row, full viewport width, one‐fish height */
 .triple-scroll-container {
   display: flex;
   width: 100vw;
-  height: 100vh;
-  overflow: hidden;             /* hide any overflow from the container itself */
+  height: 18.75vw;        /* one fish’s displayed height (33.333vw × 9/16) */
+  overflow: hidden;       /* hide any overflow beyond the first fish */
   background: #000;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* Each of the three columns */
 .triple-scroll-container .scroll-column {
-  flex: 1 1 33.3333%;           /* take up exactly one-third of the width */
+  flex: 1 1 33.3333%;     /* take up exactly one-third of the width */
   max-width: 33.3333%;
-  height: 100vh;                /* full viewport height */
-  overflow-y: scroll;           /* allow vertical scrolling */
+  height: 18.75vw;        /* exactly one fish tall */
+  overflow-y: auto;       /* allow vertical scrolling to reveal next fish */
   background: #000;
   box-sizing: border-box;
-  
-  /* Hide scrollbar in most modern browsers */
-  scrollbar-width: none;        /* Firefox */
-  -ms-overflow-style: none;     /* IE 10+ */
+
+  /* Hide scrollbar in Firefox */
+  scrollbar-width: none;
+  /* Hide scrollbar in IE/Edge */
+  -ms-overflow-style: none;
 }
+
+/* Hide scrollbar in WebKit browsers (Chrome/Safari/Edge) */
 .triple-scroll-container .scroll-column::-webkit-scrollbar {
-  display: none;                /* Safari/Chrome/Edge WebKit */
+  width: 0;
+  background: transparent;
 }
 
 /* Make every image fill the full column width, maintain aspect ratio */
 .triple-scroll-container .scroll-column img {
-  width: 100%;                  /* full width of its column */
+  width: 100%;
   height: auto;
   display: block;
   margin: 0;
