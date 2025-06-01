@@ -1,59 +1,50 @@
-/* ───────────────────────────────────────────────────────────────────────────────── */
-/* triptych.css — responsive 16:9 “one‐fish‐height” embed with three scrolling columns */
-/* ───────────────────────────────────────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────────────── */
+/* triptych.css — “slot machine window” for three‐column vertical scroll	     */
+/* ─────────────────────────────────────────────────────────────────────────── */
 
-/* 1) Reset and ensure full‐black background */
+/* Remove default margin/padding (we assume your Squarespace page is already black) */
 html, body {
   margin: 0;
   padding: 0;
-  background: #000;        /* black background behind everything */
 }
 
-/* 2) The ratio‐preserving wrapper: always 16:9 (3840×2160) */
-.embed-wrapper {
+/* 
+   .wrapper enforces a 16:9 aspect ratio 
+   so exactly one fish (3840×2160) is visible initially at any screen width. 
+*/
+.wrapper {
+  width: 100%;
+  aspect-ratio: 16 / 9;     /* same as 3840÷2160 */
+  overflow: hidden;         /* hide anything outside that 16:9 window */
   position: relative;
-  width: 100%;
-  /* 2160/3840 = 0.5625 → 56.25% padding‐top yields 16:9 */
-  padding-top: 56.25%;
-  background: #000;
-  overflow: hidden;        /* hide anything above/below the 16:9 “window” */
 }
 
-/* 3) Inside the wrapper, we absolutely position the triple‐scroll container */
-.embed-wrapper .triple-scroll-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+/* 
+   .columns is exactly the same height as .wrapper.
+   We stack three side-by-side columns inside. Each column’s content is much taller (three fish high),
+   so each column can scroll internally, but outside the wrapper you only ever see the top 16:9 slice.
+*/
+.columns {
+  display: flex;
   height: 100%;
-  display: flex;           /* three side‐by‐side columns */
-  background: #000;
-  box-sizing: border-box;
 }
 
-/* 4) Each column is exactly one‐third wide, full 100% height of the wrapper */
-.triple-scroll-container .scroll-column {
-  flex: 1 1 33.3333%;
-  max-width: 33.3333%;
+/* Each column takes up one-third of the wrapper’s width */
+.column {
+  flex: 1;
   height: 100%;
-  overflow-y: auto;         /* each column scrolls internally */
-  background: #000;
-  box-sizing: border-box;
-
-  /* Hide scrollbar in most browsers */
-  scrollbar-width: none;    /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge 10+ */
-}
-.triple-scroll-container .scroll-column::-webkit-scrollbar {
-  display: none;            /* Chrome/Safari/Edge WebKit */
+  overflow-y: auto;           /* allow vertical scrolling within each column */
+  scrollbar-width: none;      /* hide Firefox scrollbar */
+  -ms-overflow-style: none;   /* hide IE/Edge scrollbar */
 }
 
-/* 5) Make each image fill its column width, keeping aspect ratio */
-.triple-scroll-container .scroll-column img {
+/* Hide WebKit scrollbars */
+.column::-webkit-scrollbar {
+  display: none;
+}
+
+/* Make each fish‐slice image fill the column’s width and keep its aspect */
+.column img {
   width: 100%;
-  height: auto;
   display: block;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
 }
