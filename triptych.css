@@ -29,7 +29,7 @@ body {
   flex: 1 1 33.3333%;
   max-width: 33.3333%;
   height: 100%;
-  min-height: 0; /* ✅ Fix flexbox bugs on mobile */
+  min-height: 0; /* Fix flex bugs on mobile */
   overflow-y: auto;
   box-sizing: border-box;
 
@@ -37,8 +37,15 @@ body {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+
+/* 4a) Hide scrollbars in WebKit */
 .triple-scroll-container .scroll-column::-webkit-scrollbar {
-  display: none; /* Hide scrollbars in WebKit */
+  display: none;
+}
+
+/* 4b) Fix faint seam by nudging the middle column left */
+.triple-scroll-container .scroll-column:nth-child(2) {
+  margin-left: -1px; /* Overlaps 1px to hide gap */
 }
 
 /* 5) Each image fills its column’s width and preserves aspect ratio */
@@ -49,6 +56,6 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  vertical-align: top; /* ✅ Prevent image gaps */
-  will-change: transform; /* ✅ Encourage GPU rendering on mobile */
+  vertical-align: top;        /* Prevent image gaps */
+  will-change: transform;     /* Encourage GPU rendering on mobile */
 }
