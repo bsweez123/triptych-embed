@@ -1,61 +1,54 @@
-/* triptych.css — “slot machine window” forcing a 16:9 viewport so one full fish is visible */
+/* triptych.css — precise layout for 3 fish slices, avoiding rendering seams */
 
-/* 1) Reset default spacing and fill viewport height */
+/* 1) Reset spacing and prevent scrolling */
 html,
 body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow: hidden; /* Prevent page scrolling */
+  overflow: hidden;
+  background: black;
 }
 
-/* 2) .wrapper enforces a 16:9 aspect ratio */
+/* 2) Wrapper keeps 16:9 aspect ratio */
 .wrapper {
   width: 100%;
-  max-height: 100vh;
   aspect-ratio: 16 / 9;
   overflow: hidden;
+  max-height: 100vh;
 }
 
-/* 3) .triple-scroll-container fills the entire .wrapper */
+/* 3) Container for the columns, fixed pixel layout */
 .triple-scroll-container {
   display: flex;
-  width: 100%;
+  width: 3840px;  /* 1280 * 3 */
   height: 100%;
+  margin: 0 auto;  /* center if wrapper is smaller */
 }
 
-/* 4) Each .scroll-column is one-third of the width and scrolls internally */
-.triple-scroll-container .scroll-column {
-  flex: 1 1 33.3333%;
-  max-width: 33.3333%;
+/* 4) Each scroll-column is exactly 1280px */
+.scroll-column {
+  width: 1280px;
   height: 100%;
-  min-height: 0; /* Fix flex bugs on mobile */
   overflow-y: auto;
   box-sizing: border-box;
-
-  /* Hide scrollbars in Firefox and IE/Edge */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
-/* 4a) Hide scrollbars in WebKit */
-.triple-scroll-container .scroll-column::-webkit-scrollbar {
+/* Hide scrollbars in WebKit */
+.scroll-column::-webkit-scrollbar {
   display: none;
 }
 
-/* 4b) Fix faint seam by nudging the middle column left */
-.triple-scroll-container .scroll-column:nth-child(2) {
-  margin-left: -1px; /* Overlaps 1px to hide gap */
-}
-
-/* 5) Each image fills its column’s width and preserves aspect ratio */
-.triple-scroll-container .scroll-column img {
+/* 5) Image styling */
+.scroll-column img {
   width: 100%;
   height: auto;
   display: block;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  vertical-align: top;        /* Prevent image gaps */
-  will-change: transform;     /* Encourage GPU rendering on mobile */
+  vertical-align: top;
+  will-change: transform;
 }
