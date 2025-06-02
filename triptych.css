@@ -1,6 +1,6 @@
-/* triptych.css — precise layout for 3 fish slices, avoiding rendering seams */
+/* triptych.css — slot machine layout with seam masked */
 
-/* 1) Reset spacing and prevent scrolling */
+/* 1) Reset spacing and block scrolling */
 html,
 body {
   margin: 0;
@@ -10,7 +10,7 @@ body {
   background: black;
 }
 
-/* 2) Wrapper keeps 16:9 aspect ratio */
+/* 2) 16:9 container for the slot machine */
 .wrapper {
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -18,17 +18,17 @@ body {
   max-height: 100vh;
 }
 
-/* 3) Container for the columns, fixed pixel layout */
+/* 3) Flex container for the 3 columns */
 .triple-scroll-container {
   display: flex;
-  width: 3840px;  /* 1280 * 3 */
+  width: 100%;
   height: 100%;
-  margin: 0 auto;  /* center if wrapper is smaller */
 }
 
-/* 4) Each scroll-column is exactly 1280px */
+/* 4) Each scrollable column takes 1/3 of width */
 .scroll-column {
-  width: 1280px;
+  position: relative;
+  flex: 1 1 0;
   height: 100%;
   overflow-y: auto;
   box-sizing: border-box;
@@ -36,12 +36,35 @@ body {
   -ms-overflow-style: none;
 }
 
-/* Hide scrollbars in WebKit */
+/* Hide scrollbars (Chrome, Safari, Edge) */
 .scroll-column::-webkit-scrollbar {
   display: none;
 }
 
-/* 5) Image styling */
+/* 5) Mask faint seam by placing black overlay over column edges */
+.scroll-column::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: black;
+  z-index: 2;
+}
+
+/* Add overlays only on center column sides */
+.scroll-column:nth-child(1)::after {
+  right: -0.5px; /* overlaps left of center */
+}
+.scroll-column:nth-child(2)::after {
+  left: -0.5px; /* overlaps right of left */
+  right: -0.5px; /* overlaps left of right */
+}
+.scroll-column:nth-child(3)::after {
+  left: -0.5px; /* overlaps right of center */
+}
+
+/* 6) Images fill column width, no distortion */
 .scroll-column img {
   width: 100%;
   height: auto;
