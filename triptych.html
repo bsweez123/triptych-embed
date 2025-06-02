@@ -58,5 +58,28 @@
       </div>
     </div>
   </div>
+
+  <!-- ✅ Scroll-lock script inserted here -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const trapScroll = () => {
+        try {
+          window.parent.document.body.style.overflow = 'hidden';
+        } catch (e) {
+          // Fail silently if cross-origin
+        }
+      };
+      const releaseScroll = () => {
+        try {
+          window.parent.document.body.style.overflow = '';
+        } catch (e) {}
+      };
+
+      document.body.addEventListener('mouseenter', trapScroll);
+      document.body.addEventListener('mouseleave', releaseScroll);
+      document.body.addEventListener('touchstart', trapScroll);
+      document.body.addEventListener('touchend', releaseScroll);
+    });
+  </script>
 </body>
 </html>
