@@ -1,4 +1,4 @@
-/* triptych.css — fixes visible seam between middle and right image without layout changes */
+/* triptych.css — nudging right column left to hide seam */
 
 /* 1) Reset spacing and block scrolling */
 html,
@@ -10,7 +10,7 @@ body {
   background: black;
 }
 
-/* 2) Wrapper keeps 16:9 aspect ratio */
+/* 2) Keep 16:9 aspect ratio */
 .wrapper {
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -18,16 +18,15 @@ body {
   max-height: 100vh;
 }
 
-/* 3) Flex container for scrollable image columns */
+/* 3) Horizontal flex layout */
 .triple-scroll-container {
   display: flex;
   width: 100%;
   height: 100%;
 }
 
-/* 4) Columns: 1/3 width, scrollable vertically */
+/* 4) Scrollable image columns */
 .scroll-column {
-  position: relative;
   flex: 1 1 33.3333%;
   max-width: 33.3333%;
   height: 100%;
@@ -38,11 +37,12 @@ body {
   -ms-overflow-style: none;
 }
 
+/* 5) Hide scrollbars (WebKit) */
 .scroll-column::-webkit-scrollbar {
   display: none;
 }
 
-/* 5) Image layout */
+/* 6) Image layout */
 .scroll-column img {
   width: 100%;
   height: auto;
@@ -54,15 +54,7 @@ body {
   will-change: transform;
 }
 
-/* 6) Add black overlay to mask seam between middle and right */
-.scroll-column:nth-child(2)::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 1px;
-  height: 100%;
-  background-color: black;
-  z-index: 2;
-  pointer-events: none;
+/* ✅ 7) Nudge right column 1px left to hide seam */
+.scroll-column:nth-child(3) {
+  margin-left: -1px;
 }
